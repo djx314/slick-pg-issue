@@ -17,7 +17,7 @@ with array.PgArrayJdbcTypes {
 
   override val pgjson = "jsonb"
 
-  val api = new API with JsonImplicits {
+  override val api = new API with JsonImplicits {
     implicit val strListTypeMapper: DriverJdbcType[List[String]] = new SimpleArrayJdbcType[String]("text").to(_.toList)
     implicit val json4sJsonArrayTypeMapper: DriverJdbcType[List[JsValue]] =
       new AdvancedArrayJdbcType[JsValue](pgjson,
