@@ -17,7 +17,16 @@ with array.PgArrayJdbcTypes {
 
   override val pgjson = "jsonb"
 
-  object pgAPI extends API with SimpleQLPlus {
+  /*object pgAPI extends API with SimpleQLPlus {
+    implicit val strListTypeMapper: DriverJdbcType[List[String]] = new SimpleArrayJdbcType[String]("text").to(_.toList)
+    implicit val json4sJsonArrayTypeMapper: DriverJdbcType[List[JsValue]] =
+      new AdvancedArrayJdbcType[JsValue](pgjson,
+        (s) => utils.SimpleArrayUtils.fromString[JsValue](Json.parse(_))(s).orNull,
+        (v) => utils.SimpleArrayUtils.mkString[JsValue](_.toString())(v)
+      ).to(_.toList)
+  }*/
+
+  override val api = new API with SimpleQLPlus {
     implicit val strListTypeMapper: DriverJdbcType[List[String]] = new SimpleArrayJdbcType[String]("text").to(_.toList)
     implicit val json4sJsonArrayTypeMapper: DriverJdbcType[List[JsValue]] =
       new AdvancedArrayJdbcType[JsValue](pgjson,
@@ -25,8 +34,6 @@ with array.PgArrayJdbcTypes {
         (v) => utils.SimpleArrayUtils.mkString[JsValue](_.toString())(v)
       ).to(_.toList)
   }
-
-  override val api = pgAPI
 
   trait ImplicitsPlus extends ArrayImplicits
   with DateTimeImplicits
